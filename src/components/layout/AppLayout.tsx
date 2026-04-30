@@ -1,6 +1,8 @@
-import { Activity, BarChart3, HeartPulse, LayoutDashboard, UsersRound } from 'lucide-react'
+import { Activity, BarChart3, HeartPulse, LayoutDashboard, LogOut, UsersRound } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { NavLink } from 'react-router-dom'
+import { Button } from '../ui/Button'
+import { useAuthStore } from '../../stores/authStore'
 
 type AppLayoutProps = {
   children: ReactNode
@@ -13,6 +15,9 @@ const navItems = [
 ]
 
 export function AppLayout({ children }: AppLayoutProps) {
+  const logout = useAuthStore((state) => state.logout)
+  const user = useAuthStore((state) => state.user)
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -39,9 +44,19 @@ export function AppLayout({ children }: AppLayoutProps) {
           })}
         </nav>
 
-        <div className="sidebar-status">
-          <Activity size={18} />
-          <span>Care network stable</span>
+        <div className="sidebar-footer">
+          <div className="sidebar-user">
+            <span>{user?.displayName ?? 'Care team'}</span>
+            <small>{user?.email}</small>
+          </div>
+          <Button aria-label="Sign out" onClick={() => void logout()} title="Sign out" type="button" variant="ghost">
+            <LogOut size={18} />
+            <span>Sign out</span>
+          </Button>
+          <div className="sidebar-status">
+            <Activity size={18} />
+            <span>Care network stable</span>
+          </div>
         </div>
       </aside>
 
